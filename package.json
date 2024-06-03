@@ -1,0 +1,31 @@
+{
+  "name": "tauri-tabs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.1.9",
+    "@crabnebula/tauri-plugin-drag": "^0.3.1",
+    "@crabnebula/tauri-plugin-drag-as-window": "^0.1.1",
+    "@tauri-apps/api": "^1",
+    "html2canvas": "^1.4.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.23.1",
+    "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log#v1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "^5.0.2",
+    "vite": "^5.0.0"
+  }
+}
