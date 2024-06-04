@@ -1,7 +1,11 @@
-# Tauri + React + Typescript
+# Tauri Tabs
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+this is a "simple" example of how to create a windowed tab system (like VS Code tabs) with Tauri in ReactJS
 
-## Recommended IDE Setup
+this makes use of CrabNebula's `drag-rs` library, and their NPM package (which is modified, under /libs/drag-window.tsx)
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+## running
+
+`npm run tauri dev` to run 
+
+built with Vite and React
