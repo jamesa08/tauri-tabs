@@ -113,16 +113,11 @@ function TabBar({ defaultTabs }: { defaultTabs: string[] }) {
                             id: el.id,
                         });
 
-                        // remove the tab from the current window or just close it
-                        if (tabs.length == 1) {
-                            warn("closing window " + otherWindow!.label + " with element " + el.id);
-                            if (appWindow.label != "main") {
-                                await appWindow.close();
-                            }
-                        } else {
-                            warn("removing tab of element:" + el.id);
-                            removeTab(el.id);
+                        // only close window if its not the main window and there are (going to be) no tabs
+                        if (tabs.length == 1 && appWindow.label != "main") {
+                            await appWindow.close();
                         }
+                        removeTab(el.id);
 
                         return;
                     }
