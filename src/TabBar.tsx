@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { dragAsWindow, CallbackPayload } from "./libs/drag-window.tsx";
 import { emit, listen } from "@tauri-apps/api/event";
 
-function DragZone({ defaultTabs }: { defaultTabs: string[] }) {
+function TabBar({ defaultTabs }: { defaultTabs: string[] }) {
     const dragZoneRef = useRef<HTMLDivElement>(null);
     const windowLabel = appWindow.label;
     const isMounted = useRef(false);
@@ -171,10 +171,9 @@ function DragZone({ defaultTabs }: { defaultTabs: string[] }) {
     useEffect(() => {
         warn("UPDATE: tabs count " + tabs.length);
 
-        const windows = tauriWindow.getAll()
+        const windows = tauriWindow.getAll();
         let windowLabels = windows.map((window) => window.label);
         warn("UPDATE: windows: " + windowLabels.toString());
-
 
         if (!isMounted.current) {
             // first time
@@ -219,4 +218,4 @@ function DragZone({ defaultTabs }: { defaultTabs: string[] }) {
     );
 }
 
-export default DragZone;
+export default TabBar;
