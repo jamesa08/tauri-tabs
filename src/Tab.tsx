@@ -7,7 +7,7 @@ interface DragItemProps {
     children?: React.ReactNode;
 }
 
-const DragItem: React.FC<DragItemProps> = ({ id, dragHandler, children }) => {
+const Tab: React.FC<DragItemProps> = ({ id, dragHandler, children }) => {
     const dragEl = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -26,4 +26,4 @@ const DragItem: React.FC<DragItemProps> = ({ id, dragHandler, children }) => {
     );
 };
 
-export default DragItem;
+export default Tab;
