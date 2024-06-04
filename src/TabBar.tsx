@@ -55,17 +55,14 @@ function TabBar({ defaultTabs }: { defaultTabs: string[] }) {
                 url: `/#/window/${el.id}${rand}`,
                 title: `New Window ${el.id}`,
                 width: el.clientWidth,
-                height: el.clientHeight + 200, // 20: titlebar height
+                height: el.clientHeight + 200,
                 x: (payload.cursorPos.x as number) - el.clientWidth / 2,
                 y: (payload.cursorPos.y as number) - 20,
             });
-            // warn("created window " + el.id + " with tabs " + tabs);
 
-            // warn("waiting for load: " + `loaded-${el.id}${rand}`);
             // use a promise to wait for the window to load, and only resolve it when the window event is loaded and we send data
             await new Promise<void>((resolve) => {
                 newWindow.listen(`loaded-${el.id}${rand}`, () => {
-                    // warn("sending init " + `init-${el.id}${rand}`);
                     newWindow.emit(`init-${el.id}${rand}`, {
                         id: el.id,
                     });
@@ -73,13 +70,12 @@ function TabBar({ defaultTabs }: { defaultTabs: string[] }) {
                 });
             });
         } catch (e) {
-            // warn("error creating window " + e);
+            warn("error occured while creating window: " + e);
         }
     };
 
     const dragHandler = async (event: DragEvent) => {
         event.preventDefault();
-        // warn("dragging in drag handler on window " + windowLabel + " with tabs " + tabs);
 
         const el = event.target as HTMLDivElement;
         try {
@@ -88,23 +84,17 @@ function TabBar({ defaultTabs }: { defaultTabs: string[] }) {
                     // remove dragging class , aside: why is this behavior like this?
                     el.classList.remove("dragging");
 
-                    // warn("trying to create window on window " + windowLabel + " with tabs " + tabs + " and id " + el.id);
-
                     // check if the cursor is on another window, and if true, return
                     const [cursorOnOtherWindow, otherWindow] = await checkCursorOnOtherWindows(payload.cursorPos.x as number, payload.cursorPos.y as number);
 
                     if (cursorOnOtherWindow) {
                         // ignore case of cursor inside the current window, cause we don't want anything to happen
                         if (otherWindow!.label == appWindow.label) {
-                            // warn("cursor is inside the current window" + otherWindow!.label + " do nothing");
                             return;
                         }
 
                         // in the case that the cursor is inside another window, we don't want to create a new window but instead
                         // just add a new element to that window
-                        // warn("cursor is inside window " + otherWindow!.label);
-                        // warn("adding element into window " + otherWindow!.label + " with element: " + el.id);
-
                         await emit(`add-tab-${otherWindow!.label}`, {
                             id: el.id,
                         });
@@ -118,26 +108,21 @@ function TabBar({ defaultTabs }: { defaultTabs: string[] }) {
                         return;
                     }
 
-                    // warn("cursor is outside the window");
-
                     // create window
                     await createWindow(el, payload);
 
                     // is the window empty? if so, close it
                     if (tabs.length == 1 && appWindow.label != "main") {
-                        // warn("closing window " + el.id + " " + tabs.length);
                         await appWindow.close(); // any code after this will not be executed (it is closed lol)
                     }
-                    // warn("done creating window");
 
                     removeTab(el.id);
                 } catch (e) {
-                    // warn("something went wrong" + e);
+                    warn("error occured while dragging: " + e);
                 }
             });
         } catch (err) {
-            console.error("failed to drag", err);
-            // warn("failed to drag");
+            warn("failed to drag: " + err);
         }
 
         // add dragging class
@@ -145,7 +130,6 @@ function TabBar({ defaultTabs }: { defaultTabs: string[] }) {
     };
 
     const addTab = (id: string) => {
-        // warn("appendItem " + id);
         // append <Tab> to dropZoneRef with name id, dragHandler
 
         const newItemId = `${id}`;
@@ -154,40 +138,21 @@ function TabBar({ defaultTabs }: { defaultTabs: string[] }) {
 
     const removeTab = (id: string) => {
         setTabs((prevTabs) => prevTabs.filter((tabId) => tabId != id));
-
-        // warn(">>>>>> TABS REPR IN WINDOW " + windowLabel + tabs.filter((tabId) => tabId !== id).toString());
-        // warn(">>>>>> tab length after remove " + tabs.length);
     };
 
     useEffect(() => {
-        // warn("UPDATE: tabs count " + tabs.length);
-
-        const windows = tauriWindow.getAll();
-        let windowLabels = windows.map((window) => window.label);
-        // warn("UPDATE: windows: " + windowLabels.toString());
-
         if (!isMounted.current) {
-            // first time
-            // warn("React:Window " + windowLabel + " mounted");
-
-            // onElementDrop((data) => {
-            //     // warn("onElementDrop " + data.id);
-            //     addTab(data.id);
-            // });
-
+            // first time mounting
             listen(`init-${windowLabel}`, (event: any) => {
-                // warn("init " + `init-${windowLabel}` + " event received on " + windowLabel + " with id " + event.payload.id);
                 addTab(event.payload.id);
             });
 
-            // warn("emitting loaded-" + windowLabel);
             emit(`loaded-${windowLabel}`, {
                 window: windowLabel,
             });
             isMounted.current = true;
         }
         const addTabListener = listen<string>(`add-tab-${windowLabel}`, (event: { payload: any }) => {
-            // warn("tab is being added to " + windowLabel + " with id " + event.payload.id);
             addTab(event.payload.id);
         });
 
